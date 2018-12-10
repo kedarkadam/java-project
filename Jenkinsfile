@@ -1,14 +1,15 @@
-properties([pipelineTriggers([githubPush()])])
-
-node('linux') {   
-	stage('Test') {    
-		git 'https://github.com/kedarkadam/java-project.git'
-		sh 'ant -buildfile test.xml'   
-	}   
-	stage('Build') {    
-		sh 'ant'   
-	}   
-	stage('Results') {    
-		junit 'reports/*.xml'   
-	}
-}
+pipeline 
+{
+ agent { label 'linux' }
+  stages {
+   stage ('Unit Tests') {
+    steps {
+    sh 'ant -f test.xml -v'
+    junit 'reports/result.xml'
+    }
+   }
+   stage ('Build'){
+    steps {
+    sh 'ant -f build.xml -v'
+    }
+   }
